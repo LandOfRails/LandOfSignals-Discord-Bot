@@ -25,6 +25,8 @@ public class CommandIdea implements Command {
             return;
         }
 
+        //TODO Add database
+
         event.getGuild().getTextChannelById(798317520300802100L)
                 .sendMessage("**Idea from:** " + event.getAuthor().getAsMention() + "\n \n" + args[1] + "\n \n Link: " + event.getMessage().getJumpUrl())
                 .queue(message -> {
