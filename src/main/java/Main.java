@@ -1,6 +1,3 @@
-import handler.GoogleAuthorizeUtil;
-import handler.LocalSafeHandler;
-import handler.TimerTasks;
 import listener.MessageListener;
 import listener.ReactionListener;
 import listener.ServerListener;
@@ -35,10 +32,6 @@ public class Main implements EventListener {
         }
         String[] sensitiveDataSplitted = sensitiveData.split(" ");
 
-        // Google sheets stuff
-        Container.sheetsService = GoogleAuthorizeUtil.getSheetsService();
-        Container.spreadsheetId = sensitiveDataSplitted[2];
-
         // Init Discord Bot
         String token = sensitiveDataSplitted[0];
         JDABuilder builder = JDABuilder.createDefault(token);
@@ -47,21 +40,14 @@ public class Main implements EventListener {
         builder.addEventListeners(new ServerListener());
         builder.addEventListeners(new ReactionListener());
         builder.addEventListeners(new StartStopListener());
-        builder.setActivity(Activity.watching("Ich werde gerade gewartet."));
-
-        // Daten laden
-        LocalSafeHandler.loadData(Container.VotingFile, Container.ActiveVotings);
+        builder.setActivity(Activity.watching("I'm new"));
 
         // DB
-        new Container("jdbc:mariadb://landofrails.net:3306/discord-bot?user=discord-bot&password="
+        new Container("jdbc:mariadb://landofrails.net:3306/los-discord-bot?user=los-discord-bot&password="
                 + sensitiveDataSplitted[1]);
 
         // Start
         builder.build();
-
-        // TimerTasks starten
-        TimerTasks tt = new TimerTasks();
-        tt.checkActiveVotings();
     }
 
     @Override

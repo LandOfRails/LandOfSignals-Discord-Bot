@@ -1,21 +1,21 @@
 package commands;
 
+import commands.interfaces.Aliases;
+import commands.interfaces.Command;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 
-import commands.interfaces.Aliases;
-import commands.interfaces.Command;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-
 public class CommandFunCommands implements Command, Aliases {
 
-	private Map<String, String> map = new HashMap<>();
+    private Map<String, String> map = new HashMap<>();
 
-	private void refreshMap() {
-		map.clear();
-		// @formatter:off
+    private void refreshMap() {
+        map.clear();
+        // @formatter:off
         map.put("fish", "https://media.discordapp.net/attachments/625373674286874665/628653269790490665/618747043854155776.gif");
         map.put("bee", "https://media.discordapp.net/attachments/494702234744127498/634442208291979285/aaaaaaaaaaa.gif");
         map.put("duck", "https://i.gifer.com/XOsX.gif");
@@ -37,37 +37,37 @@ public class CommandFunCommands implements Command, Aliases {
         map.put("nugget", "https://media.discordapp.net/attachments/505765732840243211/783755095962681348/image0-1-2.gif");
         map.put("tiger", "https://cdn.discordapp.com/attachments/581602258102517760/798280602641367050/Ausbilder_geht_Gassi.gif");
         // @formatter:on
-	}
+    }
 
-	@Override
-	public String[] getAliases() {
-		refreshMap();
-		return map.keySet().toArray(new String[map.size()]);
-	}
+    @Override
+    public String[] getAliases() {
+        refreshMap();
+        return map.keySet().toArray(new String[map.size()]);
+    }
 
-	@Override
-	public String getName() {
-		return "fish";
-	}
+    @Override
+    public String getName() {
+        return "fish";
+    }
 
-	@Override
-	public void onCall(MessageReceivedEvent event) {
+    @Override
+    public void onCall(MessageReceivedEvent event) {
 
-		// Eventuell bessere Methode aussuchen? :/
-		refreshMap();
+        // Eventuell bessere Methode aussuchen? :/
+        refreshMap();
 
-		String messageTextRaw = event.getMessage().getContentRaw();
-		String cmd = messageTextRaw.substring(1);
+        String messageTextRaw = event.getMessage().getContentRaw();
+        String cmd = messageTextRaw.substring(1);
 
-		for (Entry<String, String> entry : map.entrySet()) {
-			if (cmd.matches("^" + entry.getKey() + "(\\s.*|$)"))
-				event.getGuild().getTextChannelById(532648338391040031L).sendMessage(entry.getValue()).queue();
-		}
+        for (Entry<String, String> entry : map.entrySet()) {
+            if (cmd.matches("^" + entry.getKey() + "(\\s.*|$)"))
+                event.getGuild().getTextChannelById(797945706819223572L).sendMessage(entry.getValue()).queue();
+        }
 
-	}
+    }
 
-	private String getTram() {
-		// @formatter:off
+    private String getTram() {
+        // @formatter:off
         switch (ThreadLocalRandom.current().nextInt(1, 4 + 1)) {
             case 1:
                 return "https://media1.tenor.com/images/6ae61031c768f8e2980908bd1a67b850/tenor.gif?itemid=14228705";
@@ -81,18 +81,18 @@ public class CommandFunCommands implements Command, Aliases {
                 return "Error Random Tram";
         }
         // @formatter:on
-	}
+    }
 
-	private String getSteamLoco() {
-		// @formatter:off
-		switch(ThreadLocalRandom.current().nextInt(1, 2 + 1)) {
-			case 1:
-				return "https://tenor.com/view/steam-train-im-coming-gif-7189638";
-			case 2:
-				return "https://tenor.com/view/thomas-in-hell-thomas-the-train-fire-gif-15403634";
-			default:
-				return "Error Random Steam Locomotive";
-		}
-		// @formatter:on
-	}
+    private String getSteamLoco() {
+        // @formatter:off
+        switch (ThreadLocalRandom.current().nextInt(1, 2 + 1)) {
+            case 1:
+                return "https://tenor.com/view/steam-train-im-coming-gif-7189638";
+            case 2:
+                return "https://tenor.com/view/thomas-in-hell-thomas-the-train-fire-gif-15403634";
+            default:
+                return "Error Random Steam Locomotive";
+        }
+        // @formatter:on
+    }
 }
