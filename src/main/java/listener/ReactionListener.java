@@ -21,6 +21,8 @@ public class ReactionListener extends ListenerAdapter {
         put("U+1f1f5U+1f1f1", 798328722125357116L);
         //FR
         put("U+1f1ebU+1f1f7", 798328750558150706L);
+        //DK
+        put("U+1F1E9U+1F1F0", 798817993722822656L);
     }};
 
     private static final long messageID = 798325250685272145L;
