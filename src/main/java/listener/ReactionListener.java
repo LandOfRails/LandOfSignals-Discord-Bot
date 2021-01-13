@@ -22,7 +22,7 @@ public class ReactionListener extends ListenerAdapter {
         //FR
         put("U+1f1ebU+1f1f7", 798328750558150706L);
         //DK
-        put("U+1F1E9U+1F1F0", 798817993722822656L);
+        put("U+1f1e9U+1f1f0", 798817993722822656L);
     }};
 
     private static final long messageID = 798325250685272145L;
@@ -31,9 +31,9 @@ public class ReactionListener extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event) {
 
-//        if (event.getTextChannel().equals(event.getGuild().getTextChannelById("726490100082409492"))) {
-//        event.getTextChannel().sendMessage(event.getReaction() + event.getReactionEmote().getAsCodepoints()).queue();
-//        }
+        if (event.getMessageIdLong() == 798820386761867304L) {
+            event.getTextChannel().sendMessage(event.getReaction() + event.getReactionEmote().getAsCodepoints()).queue();
+        }
 
         //Roles Management
         Member member = event.getMember();
