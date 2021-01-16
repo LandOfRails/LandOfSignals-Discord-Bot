@@ -61,7 +61,7 @@ public class MessageListener extends ListenerAdapter {
                         Statement stmt3 = conn.createStatement();
                         stmt3.execute("UPDATE commandIdeas SET Count = Count + 1 WHERE Command='" + event.getMessage().getContentRaw() + "'");
                         stmt3.close();
-                        event.getChannel().sendMessage("The command " + rs.getString("Command") + " was already suggested by " + event.getGuild().getMemberById(rs.getLong("MemberID")).getAsMention() + " on " + dtf.format(rs.getDate("Timestamp")) + ". (" + rs.getString("JumpUrl") + ") Maybe it will be implemented sometime :)").queue();
+                        event.getChannel().sendMessage("The command " + rs.getString("Command") + " was already suggested by " + rs.getString("MemberUsername") + " on " + dtf.format(rs.getDate("Timestamp")) + ". (" + rs.getString("JumpUrl") + ") Maybe it will be implemented sometime :)").queue();
                     }
                     stmt.close();
                 } catch (SQLException throwables) {
