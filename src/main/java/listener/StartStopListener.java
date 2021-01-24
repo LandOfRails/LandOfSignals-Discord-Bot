@@ -12,7 +12,6 @@ public class StartStopListener extends ListenerAdapter {
     @Override
     public void onShutdown(@Nonnull ShutdownEvent event) {
         System.exit(event.getCode());
-
     }
 
     @Override
