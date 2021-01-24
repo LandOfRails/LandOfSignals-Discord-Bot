@@ -40,7 +40,7 @@ public class Main implements EventListener {
         builder.addEventListeners(new ServerListener());
         builder.addEventListeners(new ReactionListener());
         builder.addEventListeners(new StartStopListener());
-        builder.setActivity(Activity.playing("I'm new"));
+        builder.setActivity(Activity.playing("with signals."));
 
         // DB
         new Container("jdbc:mariadb://landofrails.net:3306/los-discord-bot?user=los-discord-bot&password="

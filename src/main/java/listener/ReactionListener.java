@@ -9,23 +9,38 @@ import storage.Container;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.Set;
 
 public class ReactionListener extends ListenerAdapter {
 
-    private static final HashMap<String, Long> rolesList = new HashMap<String, Long>() {{
-        //EN
-        put("U+1f1faU+1f1f8", 797850691657793536L);
-        //DE
-        put("U+1f1e9U+1f1ea", 797850514561302528L);
-        //PL
-        put("U+1f1f5U+1f1f1", 798328722125357116L);
-        //FR
-        put("U+1f1ebU+1f1f7", 798328750558150706L);
-        //DK
-        put("U+1f1e9U+1f1f0", 798817993722822656L);
+    /**
+     * <MessageID, HashMap<EmojiCodepoints, RoleID>>
+     */
+    private static final HashMap<Long, HashMap<String, Long>> rolesList = new HashMap<Long, HashMap<String, Long>>() {{
+        //L A N G U A G E S
+        put(798325250685272145L, new HashMap<String, Long>() {{
+            //EN
+            put("U+1f1faU+1f1f8", 797850691657793536L);
+            //DE
+            put("U+1f1e9U+1f1ea", 797850514561302528L);
+            //PL
+            put("U+1f1f5U+1f1f1", 798328722125357116L);
+            //FR
+            put("U+1f1ebU+1f1f7", 798328750558150706L);
+            //DK
+            put("U+1f1e9U+1f1f0", 798817993722822656L);
+        }});
+
+        //O T H E R
+        //Stay informed
+        put(802698297470091274L, new HashMap<String, Long>() {{
+            put("U+1f514", 802685442310930455L);
+        }});
     }};
 
-    private static final long messageID = 798325250685272145L;
+    /**
+     * Static channelID as there is only one channel for rules
+     */
     private static final long channelID = 798322513562042408L;
 
     @Override
@@ -37,10 +52,12 @@ public class ReactionListener extends ListenerAdapter {
 
         //Roles Management
         Member member = event.getMember();
-        if (member != null && event.getMessageIdLong() == messageID && !event.getUser().isBot()) {
-            String emoteCodepoints = event.getReactionEmote().getAsCodepoints();
-            if (rolesList.containsKey(emoteCodepoints)) {
-                event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(rolesList.get(emoteCodepoints))).complete();
+        Long messageID = event.getMessageIdLong();
+        if (member != null && rolesList.containsKey(messageID) && !event.getUser().isBot()) {
+            String codepoints = event.getReactionEmote().getAsCodepoints();
+            HashMap<String, Long> roles = rolesList.get(messageID);
+            if (roles.containsKey(codepoints)) {
+                event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
             }
         }
     }
@@ -48,20 +65,24 @@ public class ReactionListener extends ListenerAdapter {
     @Override
     public void onMessageReactionRemove(@Nonnull MessageReactionRemoveEvent event) {
 
-        //Roles Management
         Member member = event.getMember();
-        if (member != null && event.getMessageIdLong() == messageID && !event.getUser().isBot()) {
-            String emoteCodepoints = event.getReactionEmote().getAsCodepoints();
-            if (rolesList.containsKey(emoteCodepoints)) {
-                event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(rolesList.get(emoteCodepoints))).complete();
+        Long messageID = event.getMessageIdLong();
+        if (member != null && rolesList.containsKey(messageID) && !event.getUser().isBot()) {
+            String codepoints = event.getReactionEmote().getAsCodepoints();
+            HashMap<String, Long> roles = rolesList.get(messageID);
+            if (roles.containsKey(codepoints)) {
+                event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
             }
         }
     }
 
     public static void checkIfReacted() {
-        Message m = Container.getGuild().getTextChannelById(channelID).retrieveMessageById(messageID).complete();
-        for (String s : rolesList.keySet()) {
-            m.addReaction(s).complete();
+        for (Long l : rolesList.keySet()) {
+            Message m = Container.getGuild().getTextChannelById(channelID).retrieveMessageById(l).complete();
+            Set<String> roles = rolesList.get(l).keySet();
+            for (String s : roles) {
+                m.addReaction(s).complete();
+            }
         }
     }
 }
