@@ -1,7 +1,6 @@
 package listener;
 
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -9,6 +8,7 @@ import storage.Container;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class ReactionListener extends ListenerAdapter {
@@ -87,6 +87,34 @@ public class ReactionListener extends ListenerAdapter {
             for (String s : roles) {
                 m.addReaction(s).complete();
             }
+        }
+    }
+
+    public static void checkIfUsersGotRole() {
+        for (Long l : rolesList.keySet()) { //Go through all messages
+            Message m = Container.getGuild().getTextChannelById(channelID).retrieveMessageById(l).complete();
+            List<MessageReaction> lmr = m.getReactions();
+            for (MessageReaction mr : lmr) //Go through all the reactions of the message
+                try {
+                    Long roleID = rolesList.get(l).get(mr.getReactionEmote().getAsCodepoints());
+                    List<User> lu = mr.retrieveUsers().complete();
+                    for (User u : lu) { //All users who have responded to this go through
+                        Guild g = mr.getGuild();
+                        Member mb = g.getMember(u);
+                        if (mb != null) {
+                            List<Role> lr = mb.getRoles();
+                            boolean roleFound = false;
+                            for (Role r : lr)
+                                if (r.getIdLong() == roleID) {
+                                    roleFound = true;
+                                    break;
+                                }
+                            if (!roleFound) g.addRoleToMember(mb, g.getRoleById(roleID)).queue();
+                        }
+                    }
+                } catch (Exception e) {
+                    Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + m.getJumpUrl() + ". Someone has responded with a reaction that has not yet been entered.").queue();
+                }
         }
     }
 }
