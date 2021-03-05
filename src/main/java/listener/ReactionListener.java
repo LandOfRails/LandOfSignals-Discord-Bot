@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class ReactionListener extends ListenerAdapter {
 
@@ -61,6 +62,10 @@ public class ReactionListener extends ListenerAdapter {
             HashMap<String, Long> roles = rolesList.get(messageID);
             if (roles.containsKey(codepoints))
                 event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
+            else {
+                Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + event.retrieveMessage().complete().getJumpUrl() + ". Someone has responded with a reaction that has not yet been added.").queue();
+                event.getChannel().sendMessage(member.getAsMention() + " The developers have been informed and will add your language soon :)").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+            }
         }
     }
 
