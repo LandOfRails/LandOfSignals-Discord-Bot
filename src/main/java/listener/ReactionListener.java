@@ -50,9 +50,8 @@ public class ReactionListener extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event) {
 
-        if (event.getMessageIdLong() == 798820386761867304L) {
+        if (event.getMessageIdLong() == 798820386761867304L)
             event.getTextChannel().sendMessage(event.getReaction() + event.getReactionEmote().getAsCodepoints()).queue();
-        }
 
         //Roles Management
         Member member = event.getMember();
@@ -60,9 +59,8 @@ public class ReactionListener extends ListenerAdapter {
         if (member != null && rolesList.containsKey(messageID) && !event.getUser().isBot()) {
             String codepoints = event.getReactionEmote().getAsCodepoints();
             HashMap<String, Long> roles = rolesList.get(messageID);
-            if (roles.containsKey(codepoints)) {
+            if (roles.containsKey(codepoints))
                 event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
-            }
         }
     }
 
@@ -74,9 +72,8 @@ public class ReactionListener extends ListenerAdapter {
         if (member != null && rolesList.containsKey(messageID) && !event.getUser().isBot()) {
             String codepoints = event.getReactionEmote().getAsCodepoints();
             HashMap<String, Long> roles = rolesList.get(messageID);
-            if (roles.containsKey(codepoints)) {
+            if (roles.containsKey(codepoints))
                 event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
-            }
         }
     }
 
@@ -84,9 +81,7 @@ public class ReactionListener extends ListenerAdapter {
         for (Long l : rolesList.keySet()) {
             Message m = Container.getGuild().getTextChannelById(channelID).retrieveMessageById(l).complete();
             Set<String> roles = rolesList.get(l).keySet();
-            for (String s : roles) {
-                m.addReaction(s).complete();
-            }
+            for (String s : roles) m.addReaction(s).complete();
         }
     }
 
@@ -94,27 +89,33 @@ public class ReactionListener extends ListenerAdapter {
         for (Long l : rolesList.keySet()) { //Go through all messages
             Message m = Container.getGuild().getTextChannelById(channelID).retrieveMessageById(l).complete();
             List<MessageReaction> lmr = m.getReactions();
-            for (MessageReaction mr : lmr) //Go through all the reactions of the message
-                try {
-                    Long roleID = rolesList.get(l).get(mr.getReactionEmote().getAsCodepoints());
+            for (MessageReaction mr : lmr) { //Go through all the reactions of the message
+                Long roleID = rolesList.get(l).get(mr.getReactionEmote().getAsCodepoints());
+                if (roleID != null) {
                     List<User> lu = mr.retrieveUsers().complete();
                     for (User u : lu) { //All users who have responded to this go through
-                        Guild g = mr.getGuild();
-                        Member mb = g.getMember(u);
-                        if (mb != null) {
-                            List<Role> lr = mb.getRoles();
-                            boolean roleFound = false;
-                            for (Role r : lr)
-                                if (r.getIdLong() == roleID) {
-                                    roleFound = true;
-                                    break;
+                        if (!u.isBot()) {
+                            Guild g = mr.getGuild();
+                            try {
+                                Member mb = g.retrieveMember(u).complete();
+                                List<Role> lr = mb.getRoles();
+                                boolean roleFound = false;
+                                for (Role r : lr) {
+                                    if (r.getIdLong() == roleID) {
+                                        roleFound = true;
+                                        break;
+                                    }
                                 }
-                            if (!roleFound) g.addRoleToMember(mb, g.getRoleById(roleID)).queue();
+                                if (!roleFound) g.addRoleToMember(mb, g.getRoleById(roleID)).queue();
+                            } catch (Exception e) {
+
+                            }
                         }
                     }
-                } catch (Exception e) {
-                    Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + m.getJumpUrl() + ". Someone has responded with a reaction that has not yet been entered.").queue();
+                } else {
+                    Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + m.getJumpUrl() + ". Someone has responded with a reaction that has not yet been added.").queue();
                 }
+            }
         }
     }
 }
