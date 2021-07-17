@@ -44,7 +44,7 @@ public class CommandHelp implements Command, Aliases {
          * true); // @MarkenJaden Musst du machen }
          */
 
-        channel.sendMessage(helpEmbed.build()).queue();
+        channel.sendMessageEmbeds(helpEmbed.build()).queue();
 
     }
 

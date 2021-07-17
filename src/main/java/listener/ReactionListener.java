@@ -34,6 +34,10 @@ public class ReactionListener extends ListenerAdapter {
             put("U+1f1f9U+1f1f7", 817429927594688542L);
             //CZ
             put("U+1f1e8U+1f1ff", 817430070200107018L);
+            //NL
+            put("U+1f1f3U+1f1f1", 865940454591168512L);
+            //IT
+            put("U+1f1eeU+1f1f9", 865940570651361280L);
         }});
 
         //O T H E R

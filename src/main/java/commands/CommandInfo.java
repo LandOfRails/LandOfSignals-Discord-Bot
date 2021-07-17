@@ -34,7 +34,7 @@ public class CommandInfo implements Command, Aliases {
         infoEmbed.addField("For more information check", "#information", true);
         infoEmbed.addField("If you have any questions check", "#faq", true);
 
-        channel.sendMessage(infoEmbed.build()).queue();
+        channel.sendMessageEmbeds(infoEmbed.build()).queue();
     }
 
     @Override
