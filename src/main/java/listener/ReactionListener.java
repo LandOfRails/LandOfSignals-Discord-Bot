@@ -38,6 +38,8 @@ public class ReactionListener extends ListenerAdapter {
             put("U+1f1f3U+1f1f1", 865940454591168512L);
             //IT
             put("U+1f1eeU+1f1f9", 865940570651361280L);
+            //PT
+            put("U+1f1f5U+1f1f9", 868139895145771019L);
         }});
 
         //O T H E R
