@@ -40,40 +40,40 @@ public class MessageListener extends ListenerAdapter {
                 }
             }
 
-            if (!called && !messageTextRaw.equals("!")) {
-
-                Connection conn = Container.getConnection();
-                try {
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT * FROM commandIdeas WHERE command='" + event.getMessage().getContentRaw() + "'");
-                    rs.last();
-                    DateFormat dtf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-                    if (rs.getRow() == 0) {
-                        Timestamp time = new Timestamp(System.currentTimeMillis());
-                        PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO commandIdeas (MemberID, MemberUsername, Command, Timestamp, JumpUrl, Count) VALUES (" + event.getMember().getIdLong() + ", '" + event.getMember().getEffectiveName() + "', '" + event.getMessage().getContentRaw() + "', ?, '" + event.getMessage().getJumpUrl() + "', " + 0 + ")");
-                        stmt2.setTimestamp(1, time);
-                        stmt2.execute();
-                        event.getChannel().sendMessage(
-                                "This command does not exist yet. It has been added to the todo list and may be included at some point :)")
-                                .queue();
-                        stmt2.close();
-                    } else {
-                        Statement stmt3 = conn.createStatement();
-                        stmt3.execute("UPDATE commandIdeas SET Count = Count + 1 WHERE Command='" + event.getMessage().getContentRaw() + "'");
-                        stmt3.close();
-                        event.getChannel().sendMessage("The command " + rs.getString("Command") + " was already suggested by " + rs.getString("MemberUsername") + " on " + dtf.format(rs.getDate("Timestamp")) + ". (" + rs.getString("JumpUrl") + ") Maybe it will be implemented sometime :)").queue();
-                    }
-                    stmt.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                } finally {
-                    try {
-                        conn.close();
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-                }
-            }
+//            if (!called && !messageTextRaw.equals("!")) {
+//
+//                Connection conn = Container.getConnection();
+//                try {
+//                    Statement stmt = conn.createStatement();
+//                    ResultSet rs = stmt.executeQuery("SELECT * FROM commandIdeas WHERE command='" + event.getMessage().getContentRaw() + "'");
+//                    rs.last();
+//                    DateFormat dtf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+//                    if (rs.getRow() == 0) {
+//                        Timestamp time = new Timestamp(System.currentTimeMillis());
+//                        PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO commandIdeas (MemberID, MemberUsername, Command, Timestamp, JumpUrl, Count) VALUES (" + event.getMember().getIdLong() + ", '" + event.getMember().getEffectiveName() + "', '" + event.getMessage().getContentRaw() + "', ?, '" + event.getMessage().getJumpUrl() + "', " + 0 + ")");
+//                        stmt2.setTimestamp(1, time);
+//                        stmt2.execute();
+//                        event.getChannel().sendMessage(
+//                                "This command does not exist yet. It has been added to the todo list and may be included at some point :)")
+//                                .queue();
+//                        stmt2.close();
+//                    } else {
+//                        Statement stmt3 = conn.createStatement();
+//                        stmt3.execute("UPDATE commandIdeas SET Count = Count + 1 WHERE Command='" + event.getMessage().getContentRaw() + "'");
+//                        stmt3.close();
+//                        event.getChannel().sendMessage("The command " + rs.getString("Command") + " was already suggested by " + rs.getString("MemberUsername") + " on " + dtf.format(rs.getDate("Timestamp")) + ". (" + rs.getString("JumpUrl") + ") Maybe it will be implemented sometime :)").queue();
+//                    }
+//                    stmt.close();
+//                } catch (SQLException throwables) {
+//                    throwables.printStackTrace();
+//                } finally {
+//                    try {
+//                        conn.close();
+//                    } catch (SQLException throwables) {
+//                        throwables.printStackTrace();
+//                    }
+//                }
+//            }
         }
     }
 
