@@ -243,3 +243,4 @@ credentials.json
 tokens/
 .idea/discord.xml
 tokens/StoredCredential
+gradle_password

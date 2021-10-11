@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'org.hidetake.ssh' version '2.10.1'
 }
 
 mainClassName = "Main"
@@ -19,6 +20,19 @@ repositories {
     }
 }
 
+ssh.settings {
+    knownHosts = allowAnyHosts
+}
+
+remotes {
+    lor {
+        host = '65.21.224.42'
+        port = 4556
+        user = 'root'
+        password = new File('gradle_password').text
+    }
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'net.dv8tion:JDA:4.3.0_297'
@@ -33,3 +47,17 @@ dependencies {
 }
 
 compileJava.options.encoding = 'UTF-8'
+
+shadowJar {
+    archiveBaseName.set('LandOfSignals-Discord-Bot')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+    doLast {
+        ssh.run {
+            session(remotes.lor) {
+                put from: 'build/libs/LandOfSignals-Discord-Bot.jar', into: '/var/www/los-bot'
+                execute 'sudo service los-bot restart'
+            }
+        }
+    }
+}
