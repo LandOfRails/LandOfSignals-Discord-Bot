@@ -54,40 +54,6 @@ public class ReactionListener extends ListenerAdapter {
      */
     private static final long channelID = 798322513562042408L;
 
-    @Override
-    public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event) {
-
-        if (event.getMessageIdLong() == 798820386761867304L)
-            event.getTextChannel().sendMessage(event.getReaction() + event.getReactionEmote().getAsCodepoints()).queue();
-
-        //Roles Management
-        Member member = event.getMember();
-        Long messageID = event.getMessageIdLong();
-        if (member != null && rolesList.containsKey(messageID) && !event.getUser().isBot()) {
-            String codepoints = event.getReactionEmote().getAsCodepoints();
-            HashMap<String, Long> roles = rolesList.get(messageID);
-            if (roles.containsKey(codepoints))
-                event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
-            else {
-                Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + event.retrieveMessage().complete().getJumpUrl() + ". Someone has responded with a reaction that has not yet been added.").queue();
-                event.getChannel().sendMessage(member.getAsMention() + " The developers have been informed and will add your language soon :)").complete().delete().queueAfter(10, TimeUnit.SECONDS);
-            }
-        }
-    }
-
-    @Override
-    public void onMessageReactionRemove(@Nonnull MessageReactionRemoveEvent event) {
-
-        Member member = event.getMember();
-        Long messageID = event.getMessageIdLong();
-        if (member != null && rolesList.containsKey(messageID) && !event.getUser().isBot()) {
-            String codepoints = event.getReactionEmote().getAsCodepoints();
-            HashMap<String, Long> roles = rolesList.get(messageID);
-            if (roles.containsKey(codepoints))
-                event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
-        }
-    }
-
     public static void checkIfReacted() {
         for (Long l : rolesList.keySet()) {
             Message m = Container.getGuild().getTextChannelById(channelID).retrieveMessageById(l).complete();
@@ -127,6 +93,40 @@ public class ReactionListener extends ListenerAdapter {
                     Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + m.getJumpUrl() + ". Someone has responded with a reaction that has not yet been added.").queue();
                 }
             }
+        }
+    }
+
+    @Override
+    public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event) {
+
+        if (event.getMessageIdLong() == 798820386761867304L)
+            event.getTextChannel().sendMessage(event.getReaction() + event.getReactionEmote().getAsCodepoints()).queue();
+
+        //Roles Management
+        Member member = event.getMember();
+        Long messageID = event.getMessageIdLong();
+        if (member != null && rolesList.containsKey(messageID) && !event.getUser().isBot()) {
+            String codepoints = event.getReactionEmote().getAsCodepoints();
+            HashMap<String, Long> roles = rolesList.get(messageID);
+            if (roles.containsKey(codepoints))
+                event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
+            else {
+                Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + event.retrieveMessage().complete().getJumpUrl() + ". Someone has responded with a reaction (" + event.getReactionEmote().getEmoji() + ", " + event.getReactionEmote().getAsCodepoints() + ") that has not yet been added.").queue();
+                event.getChannel().sendMessage(member.getAsMention() + " The developers have been informed and will add your language soon :)").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+            }
+        }
+    }
+
+    @Override
+    public void onMessageReactionRemove(@Nonnull MessageReactionRemoveEvent event) {
+
+        Member member = event.getMember();
+        Long messageID = event.getMessageIdLong();
+        if (member != null && rolesList.containsKey(messageID) && !event.getUser().isBot()) {
+            String codepoints = event.getReactionEmote().getAsCodepoints();
+            HashMap<String, Long> roles = rolesList.get(messageID);
+            if (roles.containsKey(codepoints))
+                event.getGuild().removeRoleFromMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
         }
     }
 }
