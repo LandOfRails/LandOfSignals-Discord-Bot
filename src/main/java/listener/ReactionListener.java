@@ -22,6 +22,7 @@ public class ReactionListener extends ListenerAdapter {
         put(798325250685272145L, new HashMap<String, Long>() {{
             //EN
             put("U+1f1faU+1f1f8", 797850691657793536L);
+            put("U+1f1ecU+1f1e7", 797850691657793536L);
             //DE
             put("U+1f1e9U+1f1ea", 797850514561302528L);
             //PL
@@ -113,8 +114,8 @@ public class ReactionListener extends ListenerAdapter {
             if (roles.containsKey(codepoints))
                 event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(roles.get(codepoints))).complete();
             else {
-                Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + event.retrieveMessage().complete().getJumpUrl() + ". Someone has responded with a reaction (" + event.getReactionEmote().getEmoji() + ", " + event.getReactionEmote().getAsCodepoints() + ") that has not yet been added.").queue();
-                event.getChannel().sendMessage(member.getAsMention() + " The developers have been informed and will add your language soon :)").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                Container.getGuild().getTextChannelById(797854275325001738L).sendMessage(User.fromId(222733101770604545L).getAsMention() + " check " + event.retrieveMessage().complete().getJumpUrl() + ". " + event.getUser().getAsMention() + " has responded with a reaction (" + event.getReactionEmote().getEmoji() + ", " + event.getReactionEmote().getAsCodepoints() + ") that has not yet been added.").queue();
+                event.getUser().openPrivateChannel().complete().sendMessage(member.getAsMention() + " The developers have been informed and will add your language soon :)").complete().delete().queueAfter(10, TimeUnit.SECONDS);
             }
         }
     }
